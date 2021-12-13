@@ -11,6 +11,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    expose:
+      - "80"
+      - "443"
     networks:
       - proxy-network
     deploy:
@@ -39,6 +42,5 @@ volumes:
   caddy-info:
 
 networks:
-  default:
-    external:
-      name: proxy-network
+  proxy-network:
+    external: true

@@ -28,7 +28,6 @@ services:
         condition: on-failure
   whoami:
     image: jwilder/whoami
-    replicas: 5
     ports:
       - "8000:8000"
     networks:
@@ -38,6 +37,13 @@ services:
       virtual.host: "whoami.shopsthai.com"
       virtual.tls-email: limweb@hotmail.com
       virtual.port: "8000"
+    deploy:
+      replicas: 5
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
 volumes:
   caddy-data:
   caddy-info:

@@ -28,6 +28,7 @@ services:
         condition: on-failure
   whoami:
     image: jwilder/whoami
+    replicas: 5
     ports:
       - "8000:8000"
     networks:

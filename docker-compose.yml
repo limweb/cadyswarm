@@ -1,0 +1,44 @@
+version: "3.7"
+services:
+  caddy-gen:
+    container_name: caddy-gen-proxy
+    image: "wemakeservices/caddy-gen:latest"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
+      - caddy-info:/data/caddy # needs volume to back up certificates
+      - caddy-data:/root/.caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - proxy-network
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+  whoami:
+    image: jwilder/whoami
+    ports:
+      - "8000:8000"
+    networks:
+      - proxy-network
+    labels:
+      com.docker.compose.project: "whoami"
+      virtual.host: "whoami.shopsthai.com"
+      virtual.tls-email: limweb@hotmail.com
+      virtual.port: "8000"
+volumes:
+  caddy-data:
+  caddy-info:
+
+networks:
+  default:
+    external:
+      name: proxy-network

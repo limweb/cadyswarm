@@ -20,7 +20,7 @@ services:
       placement:
         constraints:
           - node.role == manager
-      replicas: 1
+      replicas: 3
       update_config:
         parallelism: 2
         delay: 10s
@@ -54,6 +54,13 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
 volumes:
   caddy-data:
   caddy-info:
